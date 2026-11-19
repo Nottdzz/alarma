@@ -1,0 +1,74 @@
+schema: spec-driven
+
+context: |
+  Language: spanish
+  All artifacts must be written in spanish.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  PROYECTO
+  Nombre: alarma (Sistema de Gestión de Horarios, Alarmas y Estado Emocional Escolar).
+  Objetivo: centralizar el horario semanal de estudiantes escolares, la programación
+  de alarmas con ejecución secuencial cuando coinciden en la misma hora, el registro
+  del estado emocional diario y las notas rápidas.
+  Documentación fuente (leerla antes de planificar):
+  - Documentos/documento_de_dise_o_del_sistema_sdd.md (SDD: arquitectura, DDL, API REST)
+  - Documentos/est_ndares_de_desarrollo.md (convenciones de código y Git)
+  - Documentos/gemini-code-1793198715266.md (SRS: RF-01 a RF-12, historias de usuario)
+  - Documentos/gemini-code-1793199721721.md (guía de estilo UI/UX)
+
+  STACK
+  Frontend: HTML5, CSS3 (variables, Flexbox, Grid), JavaScript Vanilla ES6+.
+  Backend: Node.js + Express.
+  Base de datos: SQLite3 (better-sqlite3 o sqlite3), archivo database.db.
+  Autenticación: JWT + bcrypt (salt rounds 10).
+
+  ARQUITECTURA
+  Cliente - Servidor - Base de datos desacoplados por una API RESTful JSON.
+  Estructura objetivo:
+  - public/: index.html, login.html, css/styles.css, js/api.js, js/alarmas.js, js/app.js
+  - src/config/database.js
+  - src/controllers/, src/middlewares/, src/routes/
+  - src/server.js
+  - database.db, package.json, README.md
+  Las specs de openspec/ son la fuente de verdad del comportamiento; los documentos
+  de Documentos/ aportan contexto y diseño, pero ante conflicto prevalece la spec.
+
+  CONVENCIONES
+  - JavaScript: camelCase para variables/funciones, PascalCase para clases,
+    UPPER_SNAKE_CASE para constantes, async/await, try/catch con next(error).
+  - SQLite: tablas y columnas en snake_case; tablas en plural; PK siempre id;
+    FK <tabla_singular>_id; consultas SIEMPRE preparadas con placeholders (?).
+  - Indentación de 2 espacios, punto y coma obligatorio, comillas simples en JS.
+  - Rutas REST en kebab-case y plural: /api/horarios, /api/estados-emocionales.
+  - Respuestas exitosas: { "success": true, "message": "...", "data": ... }.
+  - Respuestas de error: { "success": false, "error": { "code": "...", "message": "..." } }.
+  - Git: main, develop, feature/<nombre-tarea>; Conventional Commits.
+  - La UI sigue la guía de estilo: índigo #4F46E5, cian #0EA5E9, variables CSS en :root,
+    tarjetas con bordes redondeados, diseño responsive.
+
+  BRECHAS CONOCIDAS (resolver mediante cambios de OpenSpec, no improvisar)
+  - La tabla horarios del DDL no tiene columna descripcion, pero RF-06 pide descripción.
+  - La API de notas no define PUT /api/notas/:id, pero US-05 pide editar notas.
+  - RF-12 excluye notificaciones push con el navegador cerrado: no diseñarlas.
+  - RF-11 excluye integraciones con Google Calendar, Todoist, etc.
+
+# Per-artifact rules (optional)
+rules:
+  proposal:
+    - Indicar explícitamente el alcance y lo que queda fuera del cambio.
+    - Referenciar los RF/RNF o specs afectadas cuando existan.
+  specs:
+    - Escribir cada requisito con SHALL o MUST y al menos un escenario WHEN/THEN.
+    - Usar nombres de capability en kebab-case y en español.
+  tasks:
+    - Dividir las tareas en pasos verificables y pequeños.
+
+# Per-operation guidance (optional)
+operations:
+  apply:
+    guidance:
+      - Respetar las convenciones de Documentos/est_ndares_de_desarrollo.md.
+      - Usar consultas preparadas en toda interacción con SQLite.
+  archive:
+    guidance:
+      - Resumir las capabilities y requisitos actualizados antes de finalizar.
